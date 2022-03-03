@@ -74,6 +74,6 @@ ggplot(choice_sub5,aes(x=MakeYear,y=Percentage,color=Fuel))+
   ylab("Share")+
   geom_line()
 
-logit_reg<-glm(eldummy ~ Weight + Shares + EngineEffect + Prices + eldummy + didummy, 
+logit_reg<-glm(eldummy ~ Weight + Shares + EngineEffect + Prices + didummy, 
                data = choice, family = binomial(link = "logit"))
 summary(logit_reg)
