@@ -47,6 +47,8 @@ combined_data['kmL'] = combined_data['kmL'].astype(float)
 combined_data = combined_data.reset_index(drop = True)
 dummy_fuel = pd.get_dummies(combined_data['Fuel'])
 combined_data = combined_data.join(dummy_fuel)
+combined_data.rename(columns = {'Prices (2015-DKK)': 'Nypris'}, inplace = True)
+combined_data.rename(columns = {'Weight (kg)': 'Weight(kg)'}, inplace = True)
 print("\ncombined_data after drop duplicates:\n", combined_data)
 combined_data.to_csv(path + 'final_datacsv.csv')
 
