@@ -1,4 +1,4 @@
-,Year,Shares,Fuel,Weight (kg),Engine effect (kW),Nypris,key,kmL,Benzin,Diesel,El
+,Year,Shares,Fuel,Weight (kg),Engine effect (kW),Prices (2015-DKK),key,kmL,Benzin,Diesel,El
 0,2006,0.002156418,Benzin,1820,108.0,403349.2991,toyota-avensis-2006-Benzin,12.3,1,0,0
 1,2006,0.001750401,Benzin,1475,68.0,163536.215,suzuki-swift-2006-Benzin,15.4,1,0,0
 2,2006,0.001487007,Benzin,1590,48.0,150287.3832,fiat-punto-2006-Benzin,17.5,1,0,0

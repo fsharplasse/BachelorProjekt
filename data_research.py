@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
-#import LinearModels as LM
+import LinearModels as LM
 import matplotlib.pyplot as plt
 
 
 pd.options.display.float_format = '{:.4f}'.format
-path = "/Users/nicholaihjelme/Documents/GitHub/Bachelorprojekt/"
+path = "/Users/frederikluneborgholmjeppesen/Documents/Universitetet/3. år/Bachelorprojektet/MotorRegisterData-main/"
 
 # CHOICE DATA
 choice_data = pd.read_csv(path + 'choice_data.csv', delimiter=';', encoding = 'unicode_escape')
@@ -45,13 +45,8 @@ for i in combined_data.index:
 combined_data['kmL'] = pd.to_numeric(combined_data['kmL'], errors = 'coerce')
 combined_data['kmL'] = combined_data['kmL'].astype(float)
 combined_data = combined_data.reset_index(drop = True)
-dummy_fuel = pd.get_dummies(combined_data['Fuel'])
-combined_data = combined_data.join(dummy_fuel)
-combined_data.rename(columns = {'Prices (2015-DKK)': 'Nypris'}, inplace = True)
-combined_data.rename(columns = {'Weight (kg)': 'Weight(kg)'}, inplace = True)
 print("\ncombined_data after drop duplicates:\n", combined_data)
-combined_data.to_csv(path + 'final_datacsv.csv')
-
+combined_data.to_excel(path + 'final_data.xlsx')
 
 # MAKING FUEL EFFICIENCY PLOT
 fe_data = combined_data[['Year', 'kmL', 'Fuel']].set_index(['Fuel'])
@@ -115,7 +110,6 @@ plt.title("Size")
   
 plt.legend()
 plt.show()
-"""""
 
 # MAKING LINEAR REGRESSION
 combined_data = combined_data.values
@@ -151,4 +145,4 @@ pols = LM.estimate(y, x, robust_se = True)
 
 print("\n")
 LM.print_table((y_label, x_labels), pols, title = "Linear regression", floatfmt = '.15f')
-"""
+
