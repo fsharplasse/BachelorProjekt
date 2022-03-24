@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 
 
 pd.options.display.float_format = '{:.4f}'.format
-path = "/Users/frederikluneborgholmjeppesen/Documents/Universitetet/3. år/Bachelorprojektet/MotorRegisterData-main/"
+path = "/Users/nicholaihjelme/Documents/GitHub/Bachelorprojekt/"
 
 # CHOICE DATA
-choice_data = pd.read_csv(path + 'choice_data.csv', delimiter=';', encoding = 'unicode_escape')
+choice_data = pd.read_csv(path + 'data/choice_data.csv', delimiter=';', encoding = 'unicode_escape')
 #choice_data = choice_data.rename(columns = {'Make-model-year-fuel' : 'key'})
 choice_data['key'] = choice_data['Model'].str.replace('jaguar ', '-')
 choice_data['key'] = choice_data['Make'] + '-' + choice_data['Model'] + '-' + choice_data['Year'].astype(str) + '-' + choice_data['Fuel']
@@ -17,7 +17,7 @@ choice_data_subset = choice_data[['Year', 'Shares', 'Fuel', 'Weight (kg)', 'Engi
 print("Choice_data subset:\n", choice_data_subset)
 
 # BILBASEN SCRAPE
-bilbasen_data = pd.read_csv(path + 'bilbasen_scrape.csv', delimiter=';', encoding = 'unicode_escape')
+bilbasen_data = pd.read_csv(path + 'data/bilbasen_scrape.csv', delimiter=';', encoding = 'unicode_escape')
 bilbasen_data.rename(columns = {'Unnamed: 6': 'make model year'}, inplace = True)
 bilbasen_data['key'] = bilbasen_data['make model year'] + '-' + bilbasen_data['drivkraft']
 bilbasen_subset = bilbasen_data[['kmL', 'key']]
@@ -46,7 +46,7 @@ combined_data['kmL'] = pd.to_numeric(combined_data['kmL'], errors = 'coerce')
 combined_data['kmL'] = combined_data['kmL'].astype(float)
 combined_data = combined_data.reset_index(drop = True)
 print("\ncombined_data after drop duplicates:\n", combined_data)
-combined_data.to_excel(path + 'final_data.xlsx')
+combined_data.to_csv(path + 'final_data.csv')
 
 # MAKING FUEL EFFICIENCY PLOT
 fe_data = combined_data[['Year', 'kmL', 'Fuel']].set_index(['Fuel'])
@@ -144,5 +144,5 @@ x = np.array(x)
 pols = LM.estimate(y, x, robust_se = True)
 
 print("\n")
-LM.print_table((y_label, x_labels), pols, title = "Linear regression", floatfmt = '.15f')
+LM.print_table((y_label, x_labels), pols, title = "Linear regression", floatfmt = '.7f')
 
