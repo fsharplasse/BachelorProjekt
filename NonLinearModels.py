@@ -1,11 +1,9 @@
 import numpy as np
-from numpy import random as rng
+from numpy import random
 from numpy import linalg as la
 from scipy import optimize
 from scipy.stats import norm
-from scipy.stats import genextreme
 from tabulate import tabulate
-
 
 
 
@@ -52,87 +50,36 @@ def estimate(
     results = [result.x, se, result.x/se, cov, result.nit, result.nfev]
     return dict(zip(names, results))
 
+def probit_criterion(beta, y, x):
+    z = x@beta
+    G = norm.cdf(z)
 
-def clogit(theta: np.array, y: np.array, x: np.array) -> np.array:
-    """Inputs data and coefficients, and outputs a vector with
-    log choice probabilities dependent on actual choice from y vector.
-
-    Args:
-        theta (np.array): Coefficients, or weights for the x array.
-        y (np.array): Dependent variable
-        x (np.array): Independent variable
-
-    Returns:
-        np.array: Log choice probabilities with dimensions (n, 1)
-    """
-    n, _, _ = x.shape
+    # Make sure that no values are below 0 or above 1.
+    h = np.sqrt(np.finfo(float).eps)
+    G = np.clip(G, h, 1 - h)
     
-    ccp, logccp = choice_prob(theta, x)
+    # Make sure g and y is 1-D array
+    G = G.reshape(-1, )
+    y = y.reshape(-1, )
     
-    # We create the row and column indexes as a array.
-    # The row needs to be the person, the column we take
-    # the choice they made.
+    ll = y*np.log(G) + (1 - y)*np.log(1 - G)
+    return ll
+
+
+def logit_criterion(beta, y, x):
+    z = x@beta
+    G = 1/(1 + np.exp(-z))
+
+    # Make sure that no values are below 0 or above 1.
+    h = np.sqrt(np.finfo(float).eps)
+    G = np.clip(G, h, 1 - h)
     
-    idx = np.column_stack((np.arange(0, n), y))
-    return np.array([logccp[row[0], row[1]] for row in idx])
-
-
-def choice_prob(theta: np.array, x: np.array) -> tuple:
-    """Takes the coefficients and covariates and outputs choice probabilites 
-    and log choice probabilites. The utilities are max rescaled before
-    choice probabilities are calculated.
-
-    Args:
-        theta (np.array): Coefficients, or weights for the x array
-        x (np.array): Dependent variables.
-
-    Returns:
-        (tuple): Returns choice probabilities and log choice probabilities,
-            both are np.array. 
-    """
-    n, j, k = x.shape
+    # Make sure g and y is 1-D array
+    G = G.reshape(-1, )
+    y = y.reshape(-1, )
     
-    u = x @ theta
-    max_u = u.max(axis=1).reshape(-1, 1)
-
-    # Substract maximum for numerical stability
-    u = u.reshape(n, j)  # Make sure u has correct shape
-    u -= max_u
-    denom = np.sum(np.exp(u), axis=1).reshape(-1, 1)
-    
-    # Conditional choice probabilites
-    ccp = np.exp(u) / denom
-    logccp = u - np.log(denom)
-    
-    return ccp, logccp
-
-
-def sim_data(n: int, j: int, theta: np.array) -> dict:
-    """Takes input values n and j to specify the shape of the output data. The
-    k dimension is inferred from the length of theta. Creates a y column vector
-    that are the choice that maximises utility, and a x matrix that are the 
-    covariates, drawn from a random normal distribution.
-
-    Args:
-        n (int): Number of households.'
-        j (int): Number of choices.
-        theta (np.array): The true value of the coefficients.
-
-    Returns:
-        dict: Returns a dict with keys "y" and "x".
-    """
-    k = theta.size
-    
-    x = rng.normal(size=(n, j, k))
-    v = x @ theta
-    e = genextreme.ppf(rng.uniform(size=(n, j)), c=0)
-    u = v + e
-    
-    # Find which choice that maximises value.
-    u_index = u.argmax(axis=1)
-    
-    label = ['y', 'x']
-    return dict(zip(label, [u_index, x]))
+    ll = y*np.log(G) + (1 - y)*np.log(1 - G)
+    return ll
 
 
 def variance(
@@ -236,4 +183,3 @@ def print_table(
     print(f"Dependent variable: {label_y}\n")
     print(tabulate(table, headers, **kwargs))
     print(f"In {results.get('iter')} iterations and {results.get('fiter')} function evaluations.")
-    

@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import LinearModels as LM
+import NonLinearModels as NLM
 import matplotlib.pyplot as plt
 
 
@@ -146,3 +147,5 @@ pols = LM.estimate(y, x, robust_se = True)
 print("\n")
 LM.print_table((y_label, x_labels), pols, title = "Linear regression", floatfmt = '.7f')
 
+
+print("\n")
