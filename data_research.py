@@ -45,6 +45,8 @@ for i in combined_data.index:
 combined_data['kmL'] = pd.to_numeric(combined_data['kmL'], errors = 'coerce')
 combined_data['kmL'] = combined_data['kmL'].astype(float)
 combined_data = combined_data.reset_index(drop = True)
+dummy_fuel = pd.get_dummies(combined_data['Fuel'])
+combined_data = combined_data.join(dummy_fuel)
 print("\ncombined_data after drop duplicates:\n", combined_data)
 combined_data.to_csv(path + 'final_datacsv.csv')
 
