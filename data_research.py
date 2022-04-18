@@ -14,7 +14,7 @@ choice_data = pd.read_csv(path + 'data/choice_data.csv', delimiter=';', encoding
 choice_data['key'] = choice_data['Model'].str.replace('jaguar ', '-')
 choice_data['key'] = choice_data['Make'] + '-' + choice_data['Model'] + '-' + choice_data['Year'].astype(str) + '-' + choice_data['Fuel']
 choice_data['key'] = choice_data['key'].str.replace(' ', '-')
-choice_data_subset = choice_data[['Year', 'Shares', 'Fuel', 'Weight (kg)', 'Engine effect (kW)', 'Prices (2015-DKK)', 'key']]
+choice_data_subset = choice_data[['Year', 'Shares', 'Fuel', 'Weight (kg)', 'Engine effect (kW)', 'Prices (2015-DKK)', 'key','Cost/km (DKK)','fuelPrice (DKK/unit)']]
 print("Choice_data subset:\n", choice_data_subset)
 
 # BILBASEN SCRAPE
@@ -46,7 +46,7 @@ for i in combined_data.index:
 combined_data['kmL'] = pd.to_numeric(combined_data['kmL'], errors = 'coerce')
 combined_data['kmL'] = combined_data['kmL'].astype(float)
 fuel_dummy = pd.get_dummies(combined_data['Fuel'])
-combined_data = combined_data.join(fuel_dummy).astype(int)
+combined_data = combined_data.join(fuel_dummy)
 combined_data = combined_data.reset_index(drop = True)
 print("\ncombined_data after drop duplicates:\n", combined_data)
 combined_data.to_csv(path + 'final_data.csv')
