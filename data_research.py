@@ -14,7 +14,7 @@ choice_data = pd.read_csv(path + 'data/choice_data.csv', delimiter=';', encoding
 choice_data['key'] = choice_data['Model'].str.replace('jaguar ', '-')
 choice_data['key'] = choice_data['Make'] + '-' + choice_data['Model'] + '-' + choice_data['Year'].astype(str) + '-' + choice_data['Fuel']
 choice_data['key'] = choice_data['key'].str.replace(' ', '-')
-choice_data_subset = choice_data[['Year', 'Shares', 'Fuel', 'Weight (kg)', 'Engine effect (kW)', 'Prices (2015-DKK)', 'key','Cost/km (DKK)']]
+choice_data_subset = choice_data[['Year', 'Shares', 'Fuel','Weight (kg)', 'Engine effect (kW)', 'Prices (2015-DKK)', 'key','Cost/km (DKK)','Make','Fuel-size segment']]
 print("Choice_data subset:\n", choice_data_subset)
 
 # BILBASEN SCRAPE
