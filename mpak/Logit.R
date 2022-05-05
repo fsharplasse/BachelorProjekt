@@ -1,12 +1,15 @@
 rm(list=ls())
 library("mlogit")
+library("survival")
+library("fastDummies")
 setwd("~/Desktop/mpak")
-dataset <- read.csv("final_data.csv")
+dataset <- read.csv("clogitchoice_data.csv")
 attach(dataset)
 table(Fuel)
 table(Make)
 table(Fuel.size.segment)
-table(Yearold)
-Yearold <-2022 - Year
-logi <- glm(El ~ Yearold + Weight..kg.+Prices..2015.DKK.+Engine.effect..kW.+Cost.km..DKK., family = binomial(link = "logit"), data = dataset)
-summary(logi)
+dataset <- dummy_cols(dataset, select_columns = 'Fuel')
+cond = clogit(Fuel_El ~ Cost.km..DKK.+Horsepower+strata(Year),data=dataset)
+summary(cond)
+
+
