@@ -1,2 +1,0 @@
-# BachelorProjekt
-Bachelorprojekt Datalogi-Økonomi
