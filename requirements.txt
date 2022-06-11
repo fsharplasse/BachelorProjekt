@@ -4,4 +4,3 @@ matplotlib
 tabulate
 scipy
 openpyxl
-time
